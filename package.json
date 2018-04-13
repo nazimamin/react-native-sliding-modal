@@ -1,0 +1,46 @@
+{
+  "name": "react-native-sliding-modal",
+  "version": "1.0.0",
+  "description": "A React Native sliding Modal that opens/close with swipe",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint src",
+    "lint": "eslint --fix *.js",
+    "precommit": "pretty-quick --staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nazimamin/react-native-sliding-modal.git"
+  },
+  "keywords": [
+    "react-native",
+    "react",
+    "native",
+    "Modal",
+    "Sliding",
+    "iOS",
+    "Gesture",
+    "Android"
+  ],
+  "author": "Nazim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nazimamin/react-native-sliding-modal/issues"
+  },
+  "homepage": "https://github.com/nazimamin/react-native-sliding-modal#readme",
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-plugin-react-app": "^3.0.0",
+    "husky": "^0.14.3",
+    "prettier": "^1.12.0",
+    "prettier-eslint": "^8.8.1",
+    "pretty-quick": "^1.4.1",
+    "react": "^16.3.1",
+    "react-native": "^0.55.2"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^6.3.1",
+    "prop-types": "^15.6.1"
+  }
+}
