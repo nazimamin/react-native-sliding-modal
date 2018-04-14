@@ -11,12 +11,12 @@ import {
   Dimensions,
   Keyboard,
   PanResponder,
-  SafeAreaView,
   StyleSheet,
   View,
   Easing,
   TouchableOpacity,
-  Modal
+  Modal,
+  SafeAreaView
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { Feather as Icon } from '@expo/vector-icons';
@@ -31,14 +31,16 @@ const SlidingHeader = ({ children, ...props }) => {
   return (
     <Animated.View {...props}>
       {!children && (
-        <Icon
-          name="minus"
-          color="#5d0e8b8f"
-          size={32}
-          style={{
-            top: -3
-          }}
-        />
+        <View style={{ alignSelf: 'center' }}>
+          <Icon
+            name="minus"
+            color="#5d0e8b8f"
+            size={32}
+            style={{
+              top: -3
+            }}
+          />
+        </View>
       )}
       {children}
     </Animated.View>
@@ -57,10 +59,10 @@ export default class SlidingModal extends PureComponent {
     closeCallback: PropTypes.func, //callback fires when clicking on backdrop, sliding down modal at `top` prop
     fullScreenCallback: PropTypes.func, //callback fires when modal is full screen
     halfScreenCallback: PropTypes.func, //callback fires when modal if half
-    top: PropTypes.number //if initially want to open the modal at a specific height
+    top: PropTypes.number, //if initially want to open the modal at a specific height
+    defaultHeader: PropTypes.bool
   };
   static Header = SlidingHeader;
-
   constructor(props) {
     super(props);
     //initially we want to open the modal half way
@@ -70,14 +72,14 @@ export default class SlidingModal extends PureComponent {
 
     this.backdropOpacity = this.props.backdropOpacity
       ? this.props.backdropOpacity
-      : 0.5;
+      : 0.6;
 
     this.modalAnimation = new Animated.ValueXY({
       x: 0,
       y: SCREEN_HEIGHT
     });
     this.state = {
-      openModal: false,
+      show: false,
       modalState: MODAL_SHOWN_HALF
     };
     this.setupPanHandler();
@@ -93,9 +95,12 @@ export default class SlidingModal extends PureComponent {
       this.keyboardWillHide
     );
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (this.props.show && !prevProps.show) {
       this.handleOpen();
+    } else if (prevProps.show && !this.props.show) {
+      this.slideModalDown();
     }
   }
   componentWillUnmount() {
@@ -193,7 +198,8 @@ export default class SlidingModal extends PureComponent {
       duration: 300,
       easing: Easing.out(Easing.quad)
     }).start(() => {
-      this.modalAnimation.y.setOffset(SCREEN_HEIGHT);
+      this.modalAnimation.setValue({ x: 0, y: SCREEN_HEIGHT });
+      this.modalAnimation.setOffset({ x: 0, y: SCREEN_HEIGHT });
       this.handleClose();
     });
   };
@@ -215,9 +221,6 @@ export default class SlidingModal extends PureComponent {
     }
   };
   render() {
-    if (this.props.show === false) {
-      return null;
-    }
     //turn the back of the screen dark to focus on modal content
     const backdropOpacity = this.modalAnimation.y.interpolate({
       inputRange: [this.MIDDLE_OF_THE_SCREEN_OFFSET / 2, SCREEN_HEIGHT],
@@ -258,41 +261,40 @@ export default class SlidingModal extends PureComponent {
       <Modal
         visible={this.state.show}
         ref={modal => {
-          this.modal = modal;
+          this.modalRef = modal;
         }}
         transparent={true}
         onRequestClose={this.slideModalDown}
       >
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
-          <View style={styles.container}>
-            <Animated.View
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                backgroundColor: '#000000ff',
-                opacity: backdropOpacity
-              }}
-            >
-              <TouchableOpacity
-                style={{ flex: 1 }}
-                onPress={this.slideModalDown}
-              />
-            </Animated.View>
-            <Animated.View
-              style={[styles.headerStyle, contentTransformedStyles]}
-              {...this.modalPanResponder.panHandlers}
-            >
-              {headerChildren}
-            </Animated.View>
-            <Animated.View
-              style={[
-                styles.contentContainer,
-                contentTransformedStyles,
-                { ...this.props.style }
-              ]}
-            >
-              {restChildren}
-            </Animated.View>
-          </View>
+        <SafeAreaView style={styles.container}>
+          <Animated.View
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: '#000000ff',
+              opacity: backdropOpacity
+            }}
+          >
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={this.slideModalDown}
+            />
+          </Animated.View>
+          <Animated.View
+            style={[styles.headerStyle, contentTransformedStyles]}
+            {...this.modalPanResponder.panHandlers}
+          >
+            {this.props.defaultHeader && SlidingHeader({})}
+            {headerChildren}
+          </Animated.View>
+          <Animated.View
+            style={[
+              styles.contentContainer,
+              contentTransformedStyles,
+              { ...this.props.style }
+            ]}
+          >
+            {restChildren}
+          </Animated.View>
         </SafeAreaView>
       </Modal>
     );

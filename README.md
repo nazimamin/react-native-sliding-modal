@@ -51,5 +51,6 @@ Props
     closeCallback: PropTypes.func, //callback fires when clicking on backdrop, sliding down modal at `top` prop
     fullScreenCallback: PropTypes.func, //callback fires when modal is full screen
     halfScreenCallback: PropTypes.func, //callback fires when modal if half
-    top: PropTypes.number  //if initially want to open the modal at a specific height
+    top: PropTypes.number,  //if initially want to open the modal at a specific height
+    defaultHeader: PropTypes.bool
 ```
