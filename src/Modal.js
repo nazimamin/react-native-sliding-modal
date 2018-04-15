@@ -161,9 +161,10 @@ export default class SlidingModal extends PureComponent {
   };
 
   openModalHalfway = () => {
-    Animated.spring(this.modalAnimation.y, {
+    Animated.timing(this.modalAnimation.y, {
       toValue: this.MIDDLE_OF_THE_SCREEN_OFFSET,
-      bounciness: 1
+      duration: 300,
+      easing: Easing.in(Easing.sin)
     }).start(() => {
       this.setState({
         modalState: MODAL_SHOWN_HALF
