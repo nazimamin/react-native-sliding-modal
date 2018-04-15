@@ -60,7 +60,7 @@ export default class SlidingModal extends PureComponent {
     fullScreenCallback: PropTypes.func, //callback fires when modal is full screen
     halfScreenCallback: PropTypes.func, //callback fires when modal if half
     top: PropTypes.number, //if initially want to open the modal at a specific height
-    defaultHeader: PropTypes.bool
+    showDefaultHeader: PropTypes.bool
   };
   static Header = SlidingHeader;
   constructor(props) {
@@ -161,10 +161,9 @@ export default class SlidingModal extends PureComponent {
   };
 
   openModalHalfway = () => {
-    Animated.timing(this.modalAnimation.y, {
+    Animated.spring(this.modalAnimation.y, {
       toValue: this.MIDDLE_OF_THE_SCREEN_OFFSET,
-      duration: 300,
-      easing: Easing.in(Easing.sin)
+      bounciness: 1
     }).start(() => {
       this.setState({
         modalState: MODAL_SHOWN_HALF
@@ -180,7 +179,8 @@ export default class SlidingModal extends PureComponent {
     //else open the modal to full
     this.modalAnimation.setOffset(TOP_OF_THE_SCREEN_POINT);
     Animated.spring(this.modalAnimation.y, {
-      toValue: TOP_OF_THE_SCREEN_POINT.y
+      toValue: TOP_OF_THE_SCREEN_POINT.y,
+      bounciness: 1
     }).start(() => {
       this.modalAnimation.flattenOffset();
       this.setState({
@@ -283,7 +283,7 @@ export default class SlidingModal extends PureComponent {
             style={[styles.headerStyle, contentTransformedStyles]}
             {...this.modalPanResponder.panHandlers}
           >
-            {this.props.defaultHeader && SlidingHeader({})}
+            {this.props.showDefaultHeader && SlidingHeader({})}
             {headerChildren}
           </Animated.View>
           <Animated.View

@@ -52,5 +52,5 @@ Props
     fullScreenCallback: PropTypes.func, //callback fires when modal is full screen
     halfScreenCallback: PropTypes.func, //callback fires when modal if half
     top: PropTypes.number,  //if initially want to open the modal at a specific height
-    defaultHeader: PropTypes.bool
+    showDefaultHeader: PropTypes.bool
 ```
