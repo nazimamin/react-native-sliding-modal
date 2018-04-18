@@ -112,7 +112,8 @@ export default class SlidingModal extends PureComponent {
   setupPanHandler = () => {
     this.modalPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) =>
+        Math.abs(gestureState.dx) > 5,
       onPanResponderGrant: () => {
         this.modalAnimation.extractOffset();
       },
